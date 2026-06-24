@@ -8,6 +8,7 @@ node_modules/
 *.local
 *.log
 *.pid
+output/
 
 data/
 vault.enc.json
@@ -22,3 +23,5 @@ __pycache__/
 
 .DS_Store
 Thumbs.db
+
+.vercel
