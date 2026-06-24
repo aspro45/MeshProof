@@ -45,7 +45,7 @@ export function Shell({ children }: { children: ReactNode }) {
         </nav>
         <div className="absolute bottom-0 w-full border-t border-line p-3 text-[11px] text-muted">
           <div className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-verified" /> GenLayer Studionet · chain {CHAIN_ID}</div>
-          <div className="mt-1.5">Contract {hasContract() ? <Hex value={CONTRACT} lead={6} tail={4} /> : <span className="text-warning">not set</span>}</div>
+          <div className="mt-1.5">Contract {hasContract() ? <Hex value={CONTRACT} kind="contract" lead={6} tail={4} /> : <span className="text-warning">not set</span>}</div>
         </div>
       </aside>
 

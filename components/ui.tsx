@@ -6,7 +6,7 @@ import {
   faCopy, faCheck, faArrowUpRightFromSquare, faCircleInfo, faTriangleExclamation,
   faCircleExclamation, faCircleCheck, faInbox,
 } from "@fortawesome/free-solid-svg-icons";
-import { truncateHex, explorerTx, explorerAddr } from "@/lib/format";
+import { truncateHex, explorerTx, explorerAddr, explorerContract } from "@/lib/format";
 
 const ASSET: Record<string, string> = {
   draft: "border-line text-muted bg-panel2",
@@ -73,9 +73,9 @@ export function Copy({ value, className = "" }: { value: string; className?: str
   );
 }
 
-export function Hex({ value, kind = "address", lead = 6, tail = 4 }: { value: string; kind?: "address" | "tx"; lead?: number; tail?: number }) {
+export function Hex({ value, kind = "address", lead = 6, tail = 4 }: { value: string; kind?: "address" | "contract" | "tx"; lead?: number; tail?: number }) {
   if (!value) return <span className="text-muted">—</span>;
-  const href = kind === "tx" ? explorerTx(value) : explorerAddr(value);
+  const href = kind === "tx" ? explorerTx(value) : kind === "contract" ? explorerContract(value) : explorerAddr(value);
   return (
     <span className="inline-flex items-center gap-1">
       <a href={href} target="_blank" rel="noreferrer" className="mono text-xs text-text/90 underline-offset-2 hover:text-primary hover:underline" title={value}>

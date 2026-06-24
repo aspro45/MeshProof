@@ -16,3 +16,4 @@ export function hostOf(u: string): string {
 const EX = (process.env.NEXT_PUBLIC_GENLAYER_EXPLORER ?? "https://explorer-studio.genlayer.com").replace(/\/$/, "");
 export const explorerTx = (h: string) => `${EX}/tx/${h}`;
 export const explorerAddr = (a: string) => `${EX}/address/${a}`;
+export const explorerContract = (a: string) => `${EX}/contracts/${a}`;
