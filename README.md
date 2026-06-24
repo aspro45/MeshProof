@@ -19,7 +19,7 @@ The contract does not simply store metadata. It coordinates reviews, challenges,
 | Network | GenLayer Studionet |
 | Chain ID | `61999` |
 | Contract | `0xf684Ab541b8a340D74E79c17d56a06F6d3cb983b` |
-| Contract Explorer | https://explorer-studio.genlayer.com/address/0xf684Ab541b8a340D74E79c17d56a06F6d3cb983b |
+| Contract Explorer | https://explorer-studio.genlayer.com/contracts/0xf684Ab541b8a340D74E79c17d56a06F6d3cb983b |
 | Deploy TX | `0x4023aac9d766675e9eed502a338edfb152dc3392187f52fffaad4990840e559b` |
 | Deployed | `2026-06-22T14:39:42.171Z` |
 
