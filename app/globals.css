@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+html, body { height: 100%; }
+body {
+  @apply bg-bg text-text font-sans antialiased;
+  background-image:
+    radial-gradient(900px 480px at 78% -10%, rgba(56,189,248,0.07), transparent 60%),
+    linear-gradient(to right, rgba(139,154,168,0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(139,154,168,0.035) 1px, transparent 1px);
+  background-size: auto, 38px 38px, 38px 38px;
+  background-attachment: fixed;
+}
+::selection { background: rgba(56, 189, 248, 0.28); }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: #1d2935; border-radius: 6px; border: 2px solid #05070A; background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background: #2a3b4a; background-clip: padding-box; }
+
+@layer components {
+  .panel { @apply rounded-md border border-line bg-panel/85 shadow-panel; }
+  .panel2 { @apply rounded-md border border-line bg-panel2; }
+  .label { @apply text-[0.625rem] font-semibold uppercase tracking-[0.12em] text-muted; }
+  .field {
+    @apply w-full rounded-md border border-line bg-bg px-3 py-2 text-sm text-text
+      placeholder:text-muted/50 focus:border-primary/70 focus:outline-none focus:ring-1
+      focus:ring-primary/30 transition-colors;
+  }
+  .btn { @apply inline-flex select-none items-center justify-center gap-2 rounded-md border px-3.5 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn-primary { @apply border-primary/60 bg-primary/15 text-primary hover:bg-primary/25; }
+  .btn-ghost { @apply border-line bg-panel2 text-text hover:bg-panel; }
+  .btn-warn { @apply border-warning/60 bg-warning/15 text-warning hover:bg-warning/25; }
+  .btn-xs { @apply px-2.5 py-1 text-xs; }
+  .mono { @apply font-mono tabular-nums; }
+  .chip { @apply inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-semibold; }
+}
