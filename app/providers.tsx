@@ -8,6 +8,11 @@ import { createConfig, http, WagmiProvider, type Config } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { studionetChain } from "@/lib/studionet";
 
+const GENLAYER_BROWSER_RPC = typeof window === "undefined"
+  ? studionetChain.rpcUrls.default.http[0]
+  : `${window.location.origin}/api/genlayer`;
+const GENLAYER_HTTP_OPTIONS = { retryCount: 3, retryDelay: 500, timeout: 30_000 } as const;
+
 export const WALLETCONNECT_PROJECT_ID = (process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? "").trim();
 type RainbowConfig = Config;
 
@@ -34,7 +39,7 @@ export function Providers({ children }: { children: ReactNode }) {
       connectors,
       ssr: true,
       transports: {
-        [studionetChain.id]: http(studionetChain.rpcUrls.default.http[0]),
+        [studionetChain.id]: http(GENLAYER_BROWSER_RPC, GENLAYER_HTTP_OPTIONS),
       },
     }));
   }, []);

@@ -14,10 +14,20 @@ export function hasContract(): boolean {
 }
 
 const A = CONTRACT as `0x${string}`;
+const READ_RPC = typeof window === "undefined"
+  ? "https://studio.genlayer.com/api"
+  : `${window.location.origin}/api/genlayer`;
+const readChain = {
+  ...studionet,
+  rpcUrls: {
+    ...studionet.rpcUrls,
+    default: { http: [READ_RPC] },
+  },
+};
 
 let _read: ReturnType<typeof createClient> | null = null;
 function rc() {
-  if (!_read) _read = createClient({ chain: studionet, account: createAccount() });
+  if (!_read) _read = createClient({ chain: readChain, account: createAccount() });
   return _read;
 }
 
