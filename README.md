@@ -6,7 +6,7 @@ MeshProof is the only app in this set built as a richer product surface: a Next.
 
 ## Product Links
 
-- Live app: https://meshproof-github.vercel.app
+- Live app: https://tanawo3-meshproof.vercel.app
 - Repository: https://github.com/aspro45/MeshProof
 - Contract explorer: https://explorer-studio.genlayer.com/contracts/0xf684Ab541b8a340D74E79c17d56a06F6d3cb983b
 
