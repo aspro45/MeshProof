@@ -2,7 +2,7 @@
 
 MeshProof is an onchain provenance and licensing review desk for production 3D assets. A registration commits the actual model URL and SHA-256 digest alongside its source, license, preview, intended use, and metadata. Reviews, challenges, appeals, and finalization remain attached to that immutable asset identity.
 
-[Live application](https://meshproof-studio.vercel.app) | [Studionet contract](https://explorer-studio.genlayer.com/address/0x1170621c8BE2acD0A1792653E3B91196A93A9b3B)
+[Live application](https://meshproof-github.vercel.app) | [Studionet contract](https://explorer-studio.genlayer.com/address/0x1170621c8BE2acD0A1792653E3B91196A93A9b3B)
 
 ## What Is Verified
 
