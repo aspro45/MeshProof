@@ -9,7 +9,7 @@ import { Shell } from "@/components/Shell";
 config.autoAddCss = false;
 
 export const metadata: Metadata = {
-  title: "MeshProof — 3D Asset Provenance & License Verification",
+  title: "MeshProof - 3D Asset Provenance & License Verification",
   description: "AI-reviewed 3D-asset provenance and license-risk protocol on GenLayer Studionet.",
 };
 

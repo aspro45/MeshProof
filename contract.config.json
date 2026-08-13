@@ -1,0 +1,9 @@
+{
+  "network": "studionet",
+  "chainId": 61999,
+  "source": "contracts/MeshProof.py",
+  "sourceSha256": "4052182ceb9c26f28bc721b0e1b0f218ad22ccc7c4ab3a20293c0c622866879c",
+  "contractAddress": "0x1170621c8BE2acD0A1792653E3B91196A93A9b3B",
+  "deployTxHash": "0x7aa163522e7906643da35fbf23c8cfd57dd44a39cd6dd28e974360142288e544",
+  "explorer": "https://explorer-studio.genlayer.com/address/0x1170621c8BE2acD0A1792653E3B91196A93A9b3B"
+}

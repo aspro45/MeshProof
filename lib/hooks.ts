@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { formatError } from "./meshproof";
 
 export interface Loadable<T> {
   data: T | undefined;
@@ -24,7 +25,7 @@ export function useLoader<T>(loader: () => Promise<T>, deps: unknown[] = []): Lo
     setError(null);
     memo()
       .then((d) => { if (alive) setData(d); })
-      .catch((e) => { if (alive) setError(e instanceof Error ? e.message : String(e)); })
+      .catch((e) => { if (alive) setError(formatError(e)); })
       .finally(() => { if (alive) setLoading(false); });
     return () => { alive = false; };
   }, [memo, tick]);

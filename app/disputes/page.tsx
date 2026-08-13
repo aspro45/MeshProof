@@ -31,7 +31,7 @@ export default function DisputesPage() {
         <p className="mt-1 max-w-2xl text-sm text-muted">Open challenges and appeals are re-adjudicated by the AI reviewer against the asset’s evidence.</p>
       </div>
 
-      {!connected && <Banner tone="info" title="Read-only">Connect a wallet to resolve; anyone can trigger AI resolution.</Banner>}
+      {!connected && <Banner tone="info" title="Read-only">Connect the asset-owner wallet to resolve an open filing.</Banner>}
 
       <div className="flex items-center justify-between border-b border-line">
         <div className="flex gap-1">
@@ -41,7 +41,7 @@ export default function DisputesPage() {
             </button>
           ))}
         </div>
-        <button type="button" className="btn btn-ghost btn-xs" onClick={() => { challenges.reload(); appeals.reload(); }}><FontAwesomeIcon icon={faRotateRight} className="h-3 w-3" /> Refresh</button>
+        <button type="button" aria-label="Refresh disputes" className="btn btn-ghost btn-xs" onClick={() => { challenges.reload(); appeals.reload(); }}><FontAwesomeIcon icon={faRotateRight} className="h-3 w-3" /><span className="hidden sm:inline">Refresh</span></button>
       </div>
 
       {tab === "challenges" ? (
@@ -54,6 +54,7 @@ export default function DisputesPage() {
               <div className="flex items-center justify-between"><span className="text-sm font-semibold">Challenge #{c.challengeId} <span className="font-normal text-muted">· asset #{c.assetId} · review #{c.reviewId}</span></span><StatusChip status={c.status} kind="decision" /></div>
               <p className="text-sm text-muted">{c.reason}</p>
               {c.evidenceUrls.length > 0 && <div className="flex flex-wrap gap-2 text-xs">{c.evidenceUrls.map((u) => <ExtLink key={u} href={u}>{hostOf(u)}</ExtLink>)}</div>}
+              <div className="mono break-all text-[11px] text-muted">snapshot {c.evidenceSnapshotDigest}</div>
               <div className="flex items-center justify-between border-t border-line pt-2 text-xs text-muted">
                 <span>by <Hex value={c.challenger} /></span>
                 <div className="flex items-center gap-2"><Link href={`/asset/${c.assetId}`} className="text-primary hover:underline">asset #{c.assetId} <FontAwesomeIcon icon={faArrowRight} className="h-2.5 w-2.5" /></Link><button className="btn btn-primary btn-xs" disabled={busy} onClick={() => resolveC(c.challengeId)}><FontAwesomeIcon icon={faBolt} className="h-3 w-3" /> Resolve</button></div>
@@ -71,6 +72,7 @@ export default function DisputesPage() {
               <div className="flex items-center justify-between"><span className="text-sm font-semibold">Appeal #{a.appealId} <span className="font-normal text-muted">· asset #{a.assetId} · review #{a.reviewId}</span></span><StatusChip status={a.status} kind="decision" /></div>
               <p className="text-sm text-muted">{a.reason}</p>
               {a.evidenceUrls.length > 0 && <div className="flex flex-wrap gap-2 text-xs">{a.evidenceUrls.map((u) => <ExtLink key={u} href={u}>{hostOf(u)}</ExtLink>)}</div>}
+              <div className="mono break-all text-[11px] text-muted">snapshot {a.evidenceSnapshotDigest}</div>
               <div className="flex items-center justify-between border-t border-line pt-2 text-xs text-muted">
                 <span>by <Hex value={a.appellant} /></span>
                 <div className="flex items-center gap-2"><Link href={`/asset/${a.assetId}`} className="text-primary hover:underline">asset #{a.assetId} <FontAwesomeIcon icon={faArrowRight} className="h-2.5 w-2.5" /></Link><button className="btn btn-primary btn-xs" disabled={busy} onClick={() => resolveA(a.appealId)}><FontAwesomeIcon icon={faBolt} className="h-3 w-3" /> Resolve</button></div>

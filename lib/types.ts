@@ -11,6 +11,9 @@ export interface Asset {
   creator: string;
   title: string;
   assetType: string;
+  modelUrl: string;
+  modelDigest: string;
+  assetCommitment: string;
   sourceUrl: string;
   licenseUrl: string;
   previewUrl: string;
@@ -31,7 +34,15 @@ export interface Review {
   assetId: string;
   reviewer: string;
   claimSummary: string;
+  modelUrlSnapshot: string;
+  modelDigestSnapshot: string;
+  assetCommitmentSnapshot: string;
   evidenceUrls: string[];
+  evidenceDigests: string[];
+  evidenceSnapshot: string;
+  evidenceSnapshotDigest: string;
+  reviewCommitment: string;
+  validatorEvidenceDigest: string;
   provenanceScore: number;
   licenseRiskScore: number;
   verdict: Verdict;
@@ -44,6 +55,7 @@ export interface Review {
   rawReviewJson: string;
   challengeIds: string[];
   appealIds: string[];
+  assessmentLocked: boolean;
 }
 
 export interface Challenge {
@@ -53,6 +65,10 @@ export interface Challenge {
   challenger: string;
   reason: string;
   evidenceUrls: string[];
+  evidenceDigests: string[];
+  evidenceSnapshotDigest: string;
+  assetCommitmentSnapshot: string;
+  validatorEvidenceDigest: string;
   status: ChallengeStatus;
   reviewJson: string;
   createdAt: number;
@@ -65,6 +81,10 @@ export interface Appeal {
   appellant: string;
   reason: string;
   evidenceUrls: string[];
+  evidenceDigests: string[];
+  evidenceSnapshotDigest: string;
+  assetCommitmentSnapshot: string;
+  validatorEvidenceDigest: string;
   status: AppealStatus;
   reviewJson: string;
   createdAt: number;

@@ -77,10 +77,10 @@ export function useTx(onDone?: () => void) {
         catch { push({ kind: "error", title: "Wrong network", msg: "Switch to GenLayer Studionet to continue." }); return null; }
       }
       setBusy(true);
-      const id = push({ kind: "pending", title: `${label}…`, msg: "Confirm in your wallet" });
+      const id = push({ kind: "pending", title: `${label}...`, msg: "Confirm in your wallet" });
       try {
         const hash = await writeMethod(address, fn, args);
-        update(id, { title: `${label}: submitted`, msg: "Waiting for acceptance…", hash });
+        update(id, { title: `${label}: submitted`, msg: "Waiting for acceptance...", hash });
         await waitAccepted(address, hash);
         update(id, { kind: "ok", title: `${label}: accepted`, hash });
         onDone?.();

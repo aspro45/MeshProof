@@ -1,6 +1,6 @@
 export function truncateHex(v: string, lead = 6, tail = 4): string {
   if (!v) return "";
-  return v.length <= lead + tail + 1 ? v : `${v.slice(0, lead)}…${v.slice(-tail)}`;
+  return v.length <= lead + tail + 1 ? v : `${v.slice(0, lead)}...${v.slice(-tail)}`;
 }
 
 export function isHttpUrl(v: string): boolean {
@@ -16,4 +16,4 @@ export function hostOf(u: string): string {
 const EX = (process.env.NEXT_PUBLIC_GENLAYER_EXPLORER ?? "https://explorer-studio.genlayer.com").replace(/\/$/, "");
 export const explorerTx = (h: string) => `${EX}/tx/${h}`;
 export const explorerAddr = (a: string) => `${EX}/address/${a}`;
-export const explorerContract = (a: string) => `${EX}/contracts/${a}`;
+export const explorerContract = (a: string) => `${EX}/address/${a}`;

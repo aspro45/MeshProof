@@ -44,7 +44,7 @@ export default function ProfilePage() {
       </div>
 
       <div className="panel flex flex-wrap items-end gap-2 p-3">
-        <label className="min-w-[260px] flex-1"><span className="label">Wallet address</span><input className="field mt-1.5 mono" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="0x…" /></label>
+        <label className="min-w-[260px] flex-1"><span className="label">Wallet address</span><input className="field mt-1.5 mono" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="0x..." /></label>
         <button type="button" className="btn btn-primary" disabled={!isValid} onClick={() => setTarget(query.trim())}><FontAwesomeIcon icon={faMagnifyingGlass} className="h-3.5 w-3.5" /> Look up</button>
         {address && <button type="button" className="btn btn-ghost" onClick={() => { setQuery(address); setTarget(address); }}>My profile</button>}
       </div>

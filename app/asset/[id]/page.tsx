@@ -12,11 +12,11 @@ import { InspectorBay } from "@/components/InspectorBay";
 import { ProvenanceGraph } from "@/components/ProvenanceGraph";
 import { AuditTimeline } from "@/components/AuditTimeline";
 import { StatusChip, VerdictBadge, Banner, Empty, Skeleton, Hex, ExtLink } from "@/components/ui";
-import { ListInput } from "@/components/inputs";
+import { EvidenceBundleInput, type EvidenceItem } from "@/components/inputs";
 import { useTx } from "@/components/Tx";
 import { useLoader } from "@/lib/hooks";
 import { getAsset, getAssetReviews, getAuditTrail, getOpenChallenges, getOpenAppeals, hasContract } from "@/lib/meshproof";
-import { hostOf, isHttpUrl } from "@/lib/format";
+import { hostOf } from "@/lib/format";
 import { toneOf, type Review } from "@/lib/types";
 
 type Tab = "reviews" | "graph" | "audit";
@@ -62,13 +62,18 @@ export default function AssetDetailPage() {
               </div>
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted">
                 <span>Creator <Hex value={a.creator} /></span>
-                <span>Declared <span className="text-text">{a.declaredLicense || "—"}</span></span>
+                <span>Declared <span className="text-text">{a.declaredLicense || "-"}</span></span>
                 <span>Selected review <span className="mono text-text">{a.selectedReviewId || "none"}</span></span>
               </div>
               <div className="flex flex-wrap gap-3 text-xs">
+                <ExtLink href={a.modelUrl}><FontAwesomeIcon icon={faCube} className="h-2.5 w-2.5" /> {hostOf(a.modelUrl)} (model)</ExtLink>
                 <ExtLink href={a.sourceUrl}><FontAwesomeIcon icon={faLink} className="h-2.5 w-2.5" /> {hostOf(a.sourceUrl)} (source)</ExtLink>
                 <ExtLink href={a.licenseUrl}><FontAwesomeIcon icon={faLink} className="h-2.5 w-2.5" /> {hostOf(a.licenseUrl)} (license)</ExtLink>
                 {a.previewUrl && <ExtLink href={a.previewUrl}><FontAwesomeIcon icon={faLink} className="h-2.5 w-2.5" /> {hostOf(a.previewUrl)} (preview)</ExtLink>}
+              </div>
+              <div className="grid gap-2 rounded-md border border-line bg-panel2/50 p-3 text-[11px] sm:grid-cols-2">
+                <div><span className="label">Model SHA-256</span><span className="mono mt-1 block break-all text-text">{a.modelDigest}</span></div>
+                <div><span className="label">Asset commitment</span><span className="mono mt-1 block break-all text-text">{a.assetCommitment}</span></div>
               </div>
               {a.intendedUse && <div className="text-xs text-muted">Intended use: <span className="text-text">{a.intendedUse}</span></div>}
             </div>
@@ -96,7 +101,7 @@ export default function AssetDetailPage() {
                 </button>
               ))}
             </div>
-            <button type="button" className="btn btn-ghost btn-xs" onClick={reloadAll}><FontAwesomeIcon icon={faRotateRight} className="h-3 w-3" /> Refresh</button>
+            <button type="button" aria-label="Refresh asset" className="btn btn-ghost btn-xs" onClick={reloadAll}><FontAwesomeIcon icon={faRotateRight} className="h-3 w-3" /><span className="hidden sm:inline">Refresh</span></button>
           </div>
 
           {tab === "reviews" && <ReviewsTab assetId={id} reviews={reviews.data} loading={reviews.loading} error={reviews.error} reload={reviews.reload} onAction={reloadAll} run={run} busy={busy} />}
@@ -124,17 +129,23 @@ function ReviewsTab({
   const [openId, setOpenId] = useState<string | null>(null);
   const [mode, setMode] = useState<"challenge" | "appeal" | null>(null);
   const [reason, setReason] = useState("");
-  const [urls, setUrls] = useState<string[]>([]);
+  const [evidence, setEvidence] = useState<EvidenceItem[]>([]);
 
   if (loading && !reviews) return <div className="space-y-2">{Array.from({ length: 2 }).map((_, i) => <Skeleton key={i} className="h-24" />)}</div>;
   if (error) return <Banner tone="danger" title="Failed to load reviews" action={<button className="btn btn-ghost btn-xs" onClick={reload}>Retry</button>}>{error}</Banner>;
   if (!reviews || reviews.length === 0) return <Empty icon={faFileLines} title="No reviews yet" hint="Submit a provenance review from the Submit page." />;
 
-  const start = (rid: string, m: "challenge" | "appeal") => { setOpenId(rid); setMode(m); setReason(""); setUrls([]); };
+  const start = (rid: string, m: "challenge" | "appeal") => { setOpenId(rid); setMode(m); setReason(""); setEvidence([]); };
   const submit = async (r: Review) => {
     const fn = mode === "challenge" ? "challenge_review" : "file_appeal";
     const label = mode === "challenge" ? "Challenge review" : "File appeal";
-    const h = await run(label, fn, [assetId, r.reviewId, reason.trim(), urls]);
+    const h = await run(label, fn, [
+      assetId,
+      r.reviewId,
+      reason.trim(),
+      evidence.map((item) => item.url),
+      evidence.map((item) => item.digest),
+    ]);
     if (h) { setOpenId(null); setMode(null); onAction(); }
   };
 
@@ -162,6 +173,10 @@ function ReviewsTab({
           )}
           {r.reviewSummary && <p className="mt-2 text-xs text-muted">{r.reviewSummary}</p>}
           {r.evidenceUrls.length > 0 && <div className="mt-2 flex flex-wrap gap-2 text-xs">{r.evidenceUrls.map((u) => <ExtLink key={u} href={u}>{hostOf(u)}</ExtLink>)}</div>}
+          <div className="mt-2 grid gap-2 rounded-md border border-line bg-panel2/50 p-2.5 text-[11px] sm:grid-cols-2">
+            <div><span className="label">Submitted snapshot</span><span className="mono mt-1 block break-all text-text">{r.evidenceSnapshotDigest}</span></div>
+            <div><span className="label">Validator snapshot</span><span className="mono mt-1 block break-all text-text">{r.validatorEvidenceDigest || "pending"}</span></div>
+          </div>
 
           <div className="mt-3 flex flex-wrap gap-2 border-t border-line pt-3">
             {["submitted", "revision_requested"].includes(r.status) && <button className="btn btn-primary btn-xs" disabled={busy} onClick={() => run("Assess review", "assess_review", [assetId, r.reviewId]).then((h) => h && onAction())}><FontAwesomeIcon icon={faMagnifyingGlassChart} className="h-3 w-3" /> Run AI assessment</button>}
@@ -173,10 +188,10 @@ function ReviewsTab({
             <div className="mt-3 space-y-3 rounded-md border border-line bg-panel2/50 p-3">
               <div className="text-sm font-semibold capitalize">{mode} review #{r.reviewId}</div>
               <label className="block"><span className="label">Reason</span><textarea className="field mt-1.5 min-h-[72px]" value={reason} onChange={(e) => setReason(e.target.value)} placeholder={mode === "challenge" ? "Why is this assessment wrong?" : "Why should this be reconsidered?"} /></label>
-              <ListInput label="Evidence URLs" items={urls} onChange={setUrls} placeholder="https://source.example/evidence" max={6} validate={(v) => (isHttpUrl(v) ? null : "Must be an http(s) URL.")} />
+              <EvidenceBundleInput label="New evidence bundle" items={evidence} onChange={setEvidence} max={6} />
               <div className="flex justify-end gap-2">
                 <button className="btn btn-ghost btn-xs" onClick={() => { setOpenId(null); setMode(null); }}>Cancel</button>
-                <button className="btn btn-primary btn-xs" disabled={busy || !reason.trim()} onClick={() => submit(r)}>{busy ? "Submitting…" : `Submit ${mode}`}</button>
+                <button className="btn btn-primary btn-xs" disabled={busy || reason.trim().length < 40 || evidence.length === 0} onClick={() => submit(r)}>{busy ? "Submitting..." : `Submit ${mode}`}</button>
               </div>
             </div>
           )}

@@ -9,7 +9,6 @@ import {
 import { InspectorBay } from "@/components/InspectorBay";
 import { ProvenanceGraph } from "@/components/ProvenanceGraph";
 import { StatusChip, VerdictBadge, Banner, Empty, Skeleton, Stat, Hex, ExtLink } from "@/components/ui";
-import { ListInput } from "@/components/inputs";
 import { useTx } from "@/components/Tx";
 import { useLoader } from "@/lib/hooks";
 import {
@@ -67,27 +66,29 @@ export default function InspectionPage() {
 
       {/* Inspection bay: left register hint / center 3D / right verdict */}
       <div className="grid gap-5 lg:grid-cols-[1fr_minmax(0,360px)]">
-        <section className="panel p-3">
+        <section className="panel min-w-0 p-3">
           <div className="mb-2 flex items-center justify-between">
-            <span className="label">3D inspection - {selectedAsset ? `asset #${selectedAsset.assetId}` : "no asset"}</span>
+            <span className="label">3D inspection · {selectedAsset ? `asset #${selectedAsset.assetId}` : "no asset"}</span>
             {selectedAsset && <StatusChip status={selectedAsset.status} kind="asset" />}
           </div>
           <InspectorBay tone={tone} height={380} />
         </section>
 
-        <section className="space-y-3">
+        <section className="min-w-0 space-y-3">
           {selectedAsset ? (
             <>
               <div className="panel space-y-2 p-4">
                 <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0"><div className="truncate text-base font-semibold">{selectedAsset.title}</div><div className="text-xs text-muted">{selectedAsset.assetType}</div></div>
-                  <StatusChip status={selectedAsset.status} kind="asset" />
+                  <div className="min-w-0"><div className="break-words text-base font-semibold leading-tight">{selectedAsset.title}</div><div className="mt-1 text-xs text-muted">{selectedAsset.assetType}</div></div>
+                  <span className="shrink-0"><StatusChip status={selectedAsset.status} kind="asset" /></span>
                 </div>
                 <div className="text-xs text-muted">Creator <Hex value={selectedAsset.creator} /></div>
                 <div className="flex flex-wrap gap-2 text-xs">
+                  <ExtLink href={selectedAsset.modelUrl}><FontAwesomeIcon icon={faCube} className="h-2.5 w-2.5" /> model</ExtLink>
                   <ExtLink href={selectedAsset.sourceUrl}><FontAwesomeIcon icon={faLink} className="h-2.5 w-2.5" /> source</ExtLink>
                   <ExtLink href={selectedAsset.licenseUrl}><FontAwesomeIcon icon={faLink} className="h-2.5 w-2.5" /> license</ExtLink>
                 </div>
+                <div className="mono break-all text-[11px] leading-5 text-muted">{selectedAsset.modelDigest}</div>
               </div>
               <div className="panel space-y-2 p-4">
                 <div className="label">Latest review</div>
@@ -95,7 +96,7 @@ export default function InspectionPage() {
                   !topReview ? <Empty icon={faMagnifyingGlassChart} title="No reviews yet" hint="Submit a provenance review to run the AI assessment." /> :
                   <>
                     <VerdictBadge verdict={topReview.verdict} prov={topReview.provenanceScore} risk={topReview.licenseRiskScore} />
-                    {topReview.reviewSummary && <p className="text-sm text-muted">{topReview.reviewSummary}</p>}
+                    {topReview.reviewSummary && <p className="break-words text-sm leading-5 text-muted">{topReview.reviewSummary}</p>}
                   </>}
               </div>
               <Link href={`/asset/${selectedAsset.assetId}`} className="btn btn-ghost w-full justify-center">Open asset #{selectedAsset.assetId} <FontAwesomeIcon icon={faChevronRight} className="h-3 w-3" /></Link>
@@ -108,10 +109,10 @@ export default function InspectionPage() {
 
       {/* Bottom: recent assets + provenance graph + challenge queue */}
       <div className="grid gap-5 lg:grid-cols-[1fr_minmax(0,340px)]">
-        <section className="panel">
+        <section className="panel min-w-0 overflow-hidden">
           <div className="flex items-center justify-between border-b border-line p-3">
             <span className="label">Recent assets</span>
-            <button type="button" className="btn btn-ghost btn-xs" onClick={assets.reload}><FontAwesomeIcon icon={faRotateRight} className={`h-3 w-3 ${assets.loading ? "animate-spin" : ""}`} /> Refresh</button>
+            <button type="button" aria-label="Refresh assets" className="btn btn-ghost btn-xs" onClick={assets.reload}><FontAwesomeIcon icon={faRotateRight} className={`h-3 w-3 ${assets.loading ? "animate-spin" : ""}`} /><span className="hidden sm:inline">Refresh</span></button>
           </div>
           <div className="divide-y divide-line">
             {assets.loading && !assets.data ? <div className="space-y-2 p-3">{Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-14" />)}</div> :
@@ -120,14 +121,14 @@ export default function InspectionPage() {
               list.map((a) => (
                 <button key={a.assetId} type="button" onClick={() => setSelected(a.assetId)} className={`flex w-full items-center gap-3 p-3 text-left transition-colors hover:bg-panel2/60 ${selectedAsset?.assetId === a.assetId ? "bg-panel2/50" : ""}`}>
                   <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md border border-line bg-panel2 text-primary"><FontAwesomeIcon icon={faCube} className="h-3 w-3" /></span>
-                  <span className="min-w-0 flex-1"><span className="flex items-center gap-2"><span className="truncate text-sm font-medium">{a.title}</span><StatusChip status={a.status} kind="asset" /></span><span className="block truncate text-xs text-muted">{a.assetType}</span></span>
+                  <span className="min-w-0 flex-1"><span className="flex items-center gap-2"><span className="min-w-0 flex-1 truncate text-sm font-medium">{a.title}</span><span className="shrink-0"><StatusChip status={a.status} kind="asset" /></span></span><span className="block truncate text-xs text-muted">{a.assetType}</span></span>
                   <FontAwesomeIcon icon={faChevronRight} className="h-3 w-3 text-muted" />
                 </button>
               ))}
           </div>
         </section>
 
-        <section className="panel p-3">
+        <section className="panel min-w-0 p-3">
           <div className="mb-2 label">Open challenge queue</div>
           {openCh.loading && !openCh.data ? <Skeleton className="h-20" /> :
             (openCh.data?.length ?? 0) === 0 ? <Empty icon={faMagnifyingGlassChart} title="No open challenges" /> :
@@ -158,6 +159,8 @@ function RegisterAsset({ onClose, onCreated }: { onClose: () => void; onCreated:
   const { run, busy, connected, wrongNetwork } = useTx();
   const [title, setTitle] = useState("");
   const [assetType, setAssetType] = useState("GLB/3D Model");
+  const [modelUrl, setModelUrl] = useState("");
+  const [modelDigest, setModelDigest] = useState("");
   const [sourceUrl, setSourceUrl] = useState("");
   const [licenseUrl, setLicenseUrl] = useState("");
   const [previewUrl, setPreviewUrl] = useState("");
@@ -165,10 +168,22 @@ function RegisterAsset({ onClose, onCreated }: { onClose: () => void; onCreated:
   const [intended, setIntended] = useState("");
   const [meta, setMeta] = useState("");
 
-  const valid = title.trim() && isHttpUrl(sourceUrl) && isHttpUrl(licenseUrl) && (!previewUrl.trim() || isHttpUrl(previewUrl));
+  const cleanModelDigest = modelDigest.trim().toLowerCase().replace(/^sha256:/, "");
+  const valid = title.trim() && isHttpUrl(modelUrl) && /^[0-9a-f]{64}$/.test(cleanModelDigest) && isHttpUrl(sourceUrl) && isHttpUrl(licenseUrl) && (!previewUrl.trim() || isHttpUrl(previewUrl));
 
   const submit = async () => {
-    const h = await run("Register asset", "register_asset", [title.trim(), assetType.trim() || "Other", sourceUrl.trim(), licenseUrl.trim(), previewUrl.trim(), declared.trim(), intended.trim(), meta.trim()]);
+    const h = await run("Register asset", "register_asset", [
+      title.trim(),
+      assetType.trim() || "Other",
+      modelUrl.trim(),
+      `sha256:${cleanModelDigest}`,
+      sourceUrl.trim(),
+      licenseUrl.trim(),
+      previewUrl.trim(),
+      declared.trim(),
+      intended.trim(),
+      meta.trim(),
+    ]);
     if (h) onCreated();
   };
 
@@ -180,16 +195,18 @@ function RegisterAsset({ onClose, onCreated }: { onClose: () => void; onCreated:
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="block"><span className="label">Title</span><input className="field mt-1.5" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Open-source 3D sample asset" /></label>
         <label className="block"><span className="label">Asset type</span><input className="field mt-1.5" value={assetType} onChange={(e) => setAssetType(e.target.value)} placeholder="GLB/3D Model" /></label>
+        <label className="block"><span className="label">Model file URL</span><input className="field mt-1.5 mono" value={modelUrl} onChange={(e) => setModelUrl(e.target.value)} placeholder="https://cdn.example/model.glb" /></label>
+        <label className="block"><span className="label">Model SHA-256</span><input className="field mt-1.5 mono" value={modelDigest} onChange={(e) => setModelDigest(e.target.value)} placeholder="64-character content digest" /></label>
         <label className="block"><span className="label">Source URL</span><input className="field mt-1.5 mono" value={sourceUrl} onChange={(e) => setSourceUrl(e.target.value)} placeholder="https://github.com/org/repo" /></label>
         <label className="block"><span className="label">License URL</span><input className="field mt-1.5 mono" value={licenseUrl} onChange={(e) => setLicenseUrl(e.target.value)} placeholder="https://github.com/org/repo/LICENSE" /></label>
         <label className="block"><span className="label">Preview URL (optional)</span><input className="field mt-1.5 mono" value={previewUrl} onChange={(e) => setPreviewUrl(e.target.value)} placeholder="https://example.org/preview" /></label>
         <label className="block"><span className="label">Declared license</span><input className="field mt-1.5" value={declared} onChange={(e) => setDeclared(e.target.value)} placeholder="MIT-style open source license" /></label>
         <label className="block sm:col-span-2"><span className="label">Intended use</span><input className="field mt-1.5" value={intended} onChange={(e) => setIntended(e.target.value)} placeholder="Use as reference for browser-based 3D demo" /></label>
-        <label className="block sm:col-span-2"><span className="label">Metadata summary</span><textarea className="field mt-1.5 min-h-[70px]" value={meta} onChange={(e) => setMeta(e.target.value)} placeholder="Short description of the asset and its public evidence…" /></label>
+        <label className="block sm:col-span-2"><span className="label">Metadata summary</span><textarea className="field mt-1.5 min-h-[70px]" value={meta} onChange={(e) => setMeta(e.target.value)} placeholder="Short description of the asset and its public evidence..." /></label>
       </div>
       <div className="flex items-center justify-end gap-2">
         <button type="button" className="btn btn-ghost" onClick={onClose}>Discard</button>
-        <button type="button" className="btn btn-primary" disabled={!valid || busy} onClick={submit}>{busy ? "Submitting…" : "Register asset"}</button>
+        <button type="button" className="btn btn-primary" disabled={!valid || busy} onClick={submit}>{busy ? "Submitting..." : "Register asset"}</button>
       </div>
     </div>
   );

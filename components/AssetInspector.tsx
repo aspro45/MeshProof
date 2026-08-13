@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -89,6 +89,15 @@ function AssetMesh({ tone }: { tone: RiskTone }) {
   );
 }
 
+function AdaptiveCamera() {
+  const { camera, size } = useThree();
+  useEffect(() => {
+    camera.position.set(0, 0, size.width < 480 ? 5.6 : size.width < 720 ? 4.8 : 4);
+    if (camera instanceof THREE.PerspectiveCamera) camera.updateProjectionMatrix();
+  }, [camera, size.width]);
+  return null;
+}
+
 function Fallback({ tone, reason }: { tone: RiskTone; reason: string }) {
   const cfg = TONE_CFG[tone];
   return (
@@ -114,9 +123,9 @@ export function AssetInspector({ tone = "neutral", height = 380 }: { tone?: Risk
   return (
     <div className="relative" style={{ height }}>
       {ok === false || crashed ? (
-        <Fallback tone={tone} reason={crashed ? "WebGL context lost — showing fallback." : "WebGL unavailable — showing fallback."} />
+        <Fallback tone={tone} reason={crashed ? "WebGL context lost - showing fallback." : "WebGL unavailable - showing fallback."} />
       ) : ok === null ? (
-        <div className="grid h-full w-full place-items-center rounded-md border border-line bg-[#0a0f16] text-sm text-muted">Initializing inspector…</div>
+        <div className="grid h-full w-full place-items-center rounded-md border border-line bg-[#0a0f16] text-sm text-muted">Initializing inspector...</div>
       ) : (
         <div className="h-full w-full overflow-hidden rounded-md border border-line bg-[#0a0f16]">
           <Canvas
@@ -128,6 +137,7 @@ export function AssetInspector({ tone = "neutral", height = 380 }: { tone?: Risk
               gl.domElement.addEventListener("webglcontextlost", () => setCrashed(true));
             }}
           >
+            <AdaptiveCamera />
             <ambientLight intensity={0.5} />
             <pointLight position={[4, 5, 5]} intensity={40} color={cfg.scan} />
             <pointLight position={[-4, -3, 2]} intensity={18} color={cfg.base} />

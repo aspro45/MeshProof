@@ -31,7 +31,7 @@ export default function RegistryPage() {
           <h1 className="mt-1 text-2xl font-semibold tracking-tight">Asset registry</h1>
           <p className="mt-1 max-w-2xl text-sm text-muted">Browse registered 3D assets by provenance status.</p>
         </div>
-        <button type="button" className="btn btn-ghost btn-xs" onClick={assets.reload}><FontAwesomeIcon icon={faRotateRight} className={`h-3 w-3 ${assets.loading ? "animate-spin" : ""}`} /> Refresh</button>
+        <button type="button" aria-label="Refresh registry" className="btn btn-ghost btn-xs" onClick={assets.reload}><FontAwesomeIcon icon={faRotateRight} className={`h-3 w-3 ${assets.loading ? "animate-spin" : ""}`} /><span className="hidden sm:inline">Refresh</span></button>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">

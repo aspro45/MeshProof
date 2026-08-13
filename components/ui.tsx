@@ -46,7 +46,7 @@ const VERDICT: Record<string, string> = {
 export function StatusChip({ status, kind }: { status: string; kind: "asset" | "review" | "decision" }) {
   const map = kind === "asset" ? ASSET : kind === "review" ? REVIEW : DECISION;
   const cls = map[status] ?? "border-line text-muted bg-panel2";
-  return <span className={`chip ${cls}`}>{(status || "—").replace(/_/g, " ")}</span>;
+  return <span className={`chip ${cls}`}>{(status || "-").replace(/_/g, " ")}</span>;
 }
 
 export function VerdictBadge({ verdict, prov, risk }: { verdict?: string; prov?: number; risk?: number }) {
@@ -74,7 +74,7 @@ export function Copy({ value, className = "" }: { value: string; className?: str
 }
 
 export function Hex({ value, kind = "address", lead = 6, tail = 4 }: { value: string; kind?: "address" | "contract" | "tx"; lead?: number; tail?: number }) {
-  if (!value) return <span className="text-muted">—</span>;
+  if (!value) return <span className="text-muted">-</span>;
   const href = kind === "tx" ? explorerTx(value) : kind === "contract" ? explorerContract(value) : explorerAddr(value);
   return (
     <span className="inline-flex items-center gap-1">

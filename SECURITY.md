@@ -1,36 +1,13 @@
 # Security
 
-MeshProof is a public frontend plus a public GenLayer contract. The repository should never contain operational wallet material.
+This repository is a public frontend and contract proof package for a GenLayer Studionet project.
 
-## Secrets Policy
+## Secrets
 
-Do not commit:
+Do not commit wallet private keys, vault files, faucet credentials, Vercel tokens, `.env` files, or local dashboard state.
 
-- private keys
-- seed phrases or mnemonics
-- vault files
-- `.env.local`
-- dashboard exports containing wallet metadata
-- deployment passwords or faucet automation logs
-
-The deployed contract address, deployer address, explorer URLs, and transaction hashes are public blockchain metadata.
-
-## Runtime Boundary
-
-The application is a client-side Next.js dapp. Reads go to GenLayer Studionet through `genlayer-js`. Writes are initiated only after the user connects a wallet and confirms the transaction.
-
-No server-side API route stores wallet data. No Vercel secret is required for the production deployment.
-
-## Vercel Headers
-
-`vercel.json` applies:
-
-- `Strict-Transport-Security`
-- `X-Content-Type-Options: nosniff`
-- `X-Frame-Options: DENY`
-- `Referrer-Policy`
-- `Permissions-Policy`
+The deployment wallet, if any, lives only in the private local workspace. Public repositories should contain public addresses, contract code, tests, deployment metadata, and UI code only.
 
 ## Reporting
 
-Use a private GitHub security advisory for sensitive findings. Do not publish exploit details in a public issue before there is a fix.
+Open a GitHub issue for non-sensitive bugs. For sensitive findings, contact the repository owner privately before publishing details.
